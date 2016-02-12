@@ -16,7 +16,7 @@ encDec = do
   putStrLn "Please press E for encoding"
   putStrLn "or D for decoding,"
   ed <- getChar
-  getChar
+  getLine
   return ed
 
 phrase :: IO String
@@ -30,7 +30,7 @@ cipher =  do
   putStrLn "Press C for Caesar, V for Vigenere,"
   putStrLn "and anything else to exit."
   ci <- getChar
-  getChar
+  getLine
   return ci
 
 main :: IO ()
