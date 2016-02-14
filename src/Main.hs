@@ -1,37 +1,32 @@
 module Main where
 
+
 import System.IO
 import System.Exit (exitSuccess)
 import Data.Char (toUpper)
-import Text.Read (reads)
 import Ciphers (inCaesar, unCaesar, inVig, unVig)
-
 
 
 encDec :: IO Char
 encDec = do
-  putStrLn ""
-  putStrLn "CIPHER PROGRAM"
-  putStrLn ""
-  putStrLn "Please press E for encoding"
-  putStrLn "or D for decoding,"
-  ed <- getChar
-  getLine
-  return ed
+  hSetBuffering stdin NoBuffering
+  hSetBuffering stdout NoBuffering
+  putStr "\nCIPHER PROGRAM\n\
+           \\nPlease press E for encoding\
+           \\nor D for decoding: "
+  getChar
 
 phrase :: IO String
 phrase = do
-  putStrLn "Please enter target phrase: "
-  ph <- getLine
-  return ph
+  putStrLn "\nPlease enter target phrase: \n"
+  getLine
 
 cipher :: IO Char
 cipher =  do
-  putStrLn "Press C for Caesar, V for Vigenere,"
-  putStrLn "and anything else to exit."
-  ci <- getChar
-  getLine
-  return ci
+  hSetBuffering stdout NoBuffering
+  putStr "\nPress C for Caesar, V for Vigenere,\
+           \\nand anything else to exit: "
+  getChar
 
 main :: IO ()
 main = do
@@ -42,29 +37,33 @@ main = do
 
 choice :: Char -> Char -> String -> IO ()
 choice ci ed ph
-    | ed `notElem` "ED" = exitSuccess
     | ci == 'C' = caesar ed ph
-    -- | cipher == 'V' = vigenere ed phrase
+    | ci == 'V' = vigenere ed ph
     | otherwise = exitSuccess
 
 parseInt :: String -> Maybe Int
-parseInt s = case (reads s) :: [(Int, String)] of
+parseInt s = case reads s :: [(Int, String)] of
   [(int, _)] -> Just int
+  (_,_):(_:_) -> Nothing
   [] -> Nothing
 
 caesar :: Char -> String -> IO ()
 caesar ed ph = do
   hSetBuffering stdout NoBuffering
-  putStrLn "Now enter how many chars to move (number): "
+  putStr "\nNow enter how many chars to move (number): "
   rawMoves <- getLine
-  case (parseInt rawMoves) of
+  case parseInt rawMoves of
     Just moves ->
-        case (ed == 'E') of
-          True -> putStrLn (inCaesar moves ph)
-          False ->  putStrLn (unCaesar moves ph)
+        if ed == 'E'
+        then putStrLn (inCaesar moves ph)
+        else putStrLn (unCaesar moves ph)
     Nothing -> exitSuccess
+
+vigenere :: Char -> String -> IO ()
+vigenere ed target = do
+  putStrLn "\nNow enter key phrase (string): \n"
+  key <- getLine
+  if ed == 'E'
+  then putStrLn (inVig key target)
+  else putStrLn (unVig key target)
   exitSuccess
-
-vigenere :: Char -> IO ()
-vigenere c = undefined
-
