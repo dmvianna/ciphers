@@ -4,16 +4,14 @@
 name:                ciphers
 version:             0.1.0.0
 synopsis:            Caesar and Vigenere ciphers
--- description:         
+description:         This is an exercise for @haskellbook
 homepage:            dmlvianna@gmail.com
 license:             BSD3
 license-file:        LICENSE
 author:              Daniel Vianna
 maintainer:          dmlvianna@gmail.com
--- copyright:           
 category:            User-interface
 build-type:          Simple
--- extra-source-files:  
 cabal-version:       >=1.10
 
 executable ciphers
@@ -25,9 +23,18 @@ executable ciphers
 
 library
   exposed-modules:     Ciphers
-  -- other-modules:       
-  -- other-extensions:    
   build-depends:       base >=4.7 && <5
+                     , QuickCheck
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options:         -Wall
+
+test-suite tests
+  ghc-options:         -Wall -fno-warn-orphans
+  type:                exitcode-stdio-1.0
+  main-is:             tests.hs
+  hs-source-dirs:      tests
+  build-depends:       base
+                     , ciphers
+                     , QuickCheck
+  default-language:    Haskell2010
